@@ -1,8 +1,7 @@
-const mongoDbHelper = require("./mongoHelper")
+const mongoDbHelper = require('./mongoHelper');
 mongoDbHelper.connect().then(async () => {
-    // Load helpers
-    const userModelDB1 = require("./model");
-  
-    console.log(userModelDB1.findOne({}))
-  
-})
+  // Load helpers
+  const userModelDB1 = require('./model');
+
+  userModelDB1.findOne({});
+});
