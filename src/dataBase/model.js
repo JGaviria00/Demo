@@ -2,10 +2,22 @@ const mongodb = require('@condor-labs/mongodb')();
 const helperMongo = require('./mongoHelper');
 
 const BookSchema = new mongodb.mongoose.Schema({
-  title: String,
-  author: String,
-  pages: Number,
-  status: String,
+  title: {
+    type: String,
+    require: true,
+  },
+  author: {
+    type: String,
+    require: true,
+  },
+  pages: {
+    type: Number,
+    require: true,
+  },
+  status: {
+    type: String,
+    require: true,
+  },
 });
 
 const dbConnection = helperMongo.clients['connection_mongo']; // I got the name of the connection from mongoDbSettings

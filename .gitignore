@@ -1,1 +1,8 @@
 node_modules
+.eslintignore
+.eslintrc.js
+.husky/
+.prettierignore
+.prettierrc
+.vscode/
+CODEOWNERS
