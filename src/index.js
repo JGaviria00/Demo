@@ -18,12 +18,6 @@ healthMonitor(app);
     const { myschema } = require('./graphql/schema');
     logger.info({ DataBase: 'Data base is conected.' });
 
-    app.get('/', (req, res) => {
-      res.json({
-        message: 'Welcome.',
-      });
-    });
-
     app.use(
       '/graphql',
       graphqlHTTP({
@@ -40,4 +34,12 @@ healthMonitor(app);
   }
 })();
 
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Welcome.',
+  });
+});
+
 app.listen(3000, () => logger.info({ Server: 'Server on port 3000' }));
+
+module.exports = app;

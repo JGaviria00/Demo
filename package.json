@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/index.js",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
     "lint": "eslint .",
     "format": "prettier \"**/*.{js,jsx,ts,tsx}\" --write",
     "lint-global": "echo \"Prettier is running...\" && prettier \"**/*.{js,jsx,ts,tsx}\" --write && echo \"ESlint is running...\" && eslint ."
@@ -16,13 +18,16 @@
     "@condor-labs/health-middleware": "^1.1.2",
     "@condor-labs/logger": "^1.1.0",
     "@condor-labs/mongodb": "^1.1.2",
+    "chai": "^4.3.4",
     "express": "^4.17.2",
     "express-graphql": "^0.12.0",
     "graphql": "^16.2.0",
     "graphql-tools": "^8.2.0",
+    "jest": "^27.4.5",
     "nodemon": "^2.0.15",
     "pm2": "^5.1.2",
-    "response-time": "^2.3.2"
+    "response-time": "^2.3.2",
+    "supertest": "^6.1.6"
   },
   "devDependencies": {
     "@babel/core": "~7.15.5",
@@ -46,6 +51,11 @@
     "*.{js,jsx,ts,tsx}": [
       "eslint",
       "prettier --write"
+    ]
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/testSetup.js"
     ]
   }
 }
