@@ -5,18 +5,8 @@ const { resolvers } = require('./resolvers');
 const typeDefs = `
 
     type Query {
-        hello: String
-        greet(name: String!): String
-        tasks: [Task]
         Books: [Book] 
         bookDetails( _id: ID): Book
-    }
-
-    type Task {
-        _id: ID
-        title: String!
-        description: String!
-        number: Int
     }
 
     type Book {
@@ -28,18 +18,11 @@ const typeDefs = `
     }
 
     type Mutation {
-        createTask(input: TaskInput): Task
         createBook(input: BookInput): Book
         deleteBook( _id: ID): Book
         updateBook( _id: ID, input: BookInput): Book
     }
-
-    input TaskInput {
-        title: String!
-        description: String!
-        number: Int
-    }
-
+    
     input BookInput {
         title: String!
         author: String!
