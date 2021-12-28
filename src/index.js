@@ -21,15 +21,16 @@ healthMonitor(app, healthConfig);
     logger.info({ DataBase: 'Data base is conected.' });
 
     //graphql middleware
-    app.use('/graphql', () => {
-      return graphqlHTTP({
+    app.use(
+      '/graphql',
+      graphqlHTTP({
         graphiql: true,
         schema: myschema,
         context: {
           client,
         },
-      });
-    });
+      })
+    );
   } catch (e) {
     logger.error(`Data base is No conected. ${e}`);
   }

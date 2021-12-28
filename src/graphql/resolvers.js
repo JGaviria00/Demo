@@ -68,8 +68,10 @@ const resolvers = {
     },
     async updateBook(_, { _id, input }, { client }) {
       // check if title already exist.
+      console.log(input.title);
       const ifItExist = await Book.find({ title: input.title });
-      if (ifItExist.length > 0 && ifItExist[0].title !== input.title) {
+      if (ifItExist.length > 0 && ifItExist[0].title === input.title) {
+        console.log(ifItExist[0].title);
         logger.info({ ErrorMessage: 'This book already exist.' });
         return null;
       }
