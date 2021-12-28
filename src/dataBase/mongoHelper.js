@@ -1,11 +1,11 @@
 const mongoDbSettings = [
   {
     connectionName: 'connection_mongo',
-    host: 'cluster0-shard-00-00.bqg6z.mongodb.net,cluster0-shard-00-01.bqg6z.mongodb.net,cluster0-shard-00-02.bqg6z.mongodb.net',
-    port: '27017',
-    database: 'Cluster0',
-    user: 'jhonga',
-    password: 'jhonga123',
+    host: process.env.HOST,
+    port: process.env.PORT,
+    database: process.env.DATABASE,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
     ssl: true,
     authSource: 'admin',
   },
