@@ -43,7 +43,6 @@ const resolvers = {
     },
     async deleteBook(_, { _id }) {
       const ifItExist = await ClientMongo.findById(_id);
-      console.log(ifItExist);
       if (ifItExist === null) {
         //check if the book exist
         logger.info({ ErrorMessage: "This book doesn't exist." });
@@ -64,7 +63,7 @@ const resolvers = {
       // update book
       const newUpdateBook = await ClientMongo.update(_id, input);
       // remove of cache
-      ClientRedis.update(_id, input);
+      ClientRedis.delete(_id);
       return newUpdateBook;
     },
   },
