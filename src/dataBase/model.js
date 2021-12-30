@@ -1,5 +1,4 @@
 const mongodb = require('@condor-labs/mongodb')();
-const helperMongo = require('./mongoHelper');
 
 const BookSchema = new mongodb.mongoose.Schema({
   title: {
@@ -20,7 +19,7 @@ const BookSchema = new mongodb.mongoose.Schema({
   },
 });
 
-const dbConnection = helperMongo.clients['connection_mongo']; // I got the name of the connection from mongoDbSettings
-const userModel = dbConnection.model('Book', BookSchema); // then I am able to create a my model based on the connection object that I got using my helper
+// const dbConnection = helperMongo.clients['connection_mongo']; // I got the name of the connection from mongoDbSettings
+const BookModel = mongodb.mongoose.model('Book', BookSchema); // then I am able to create a my model based on the connection object that I got using my helper
 
-module.exports = userModel;
+module.exports = BookModel;

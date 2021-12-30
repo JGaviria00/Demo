@@ -5,7 +5,7 @@ const { resolvers } = require('./resolvers');
 const typeDefs = `
 
     type Query {
-        Books: [Book] 
+        Books( page: Int, limit: Int ):[Book] 
         bookDetails( _id: ID): Book
     }
 
@@ -27,9 +27,14 @@ const typeDefs = `
         title: String!
         author: String!
         pages: Int!
-        status: String!
+        status: Status!
     }
 
+    enum Status {
+        LENT
+        AVAILABLE
+        UNAVAILABLE
+    }
 `;
 
 const myschema = makeExecutableSchema({

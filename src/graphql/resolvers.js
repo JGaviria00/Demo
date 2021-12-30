@@ -1,91 +1,70 @@
-const Book = require('../dataBase/model');
 const logger = require('@condor-labs/logger');
+const Mongo = require('../repository/mongoRepository');
+const Redis = require('../repository/redisRepository');
+
+const ClientMongo = new Mongo();
+const ClientRedis = new Redis();
 
 const resolvers = {
   Query: {
     // list all books.
-    async Books() {
-      const books = await Book.find();
-      return books;
+    async Books(_, { page, limit }) {
+      return await ClientMongo.listAll(page, limit);
     },
     //list details about a specific book.
-    async bookDetails(_, { _id }, { client }) {
-      return new Promise((res, rej) => {
-        //check if the key is in cache.
-        client.get(String(_id), async (error, reply) => {
-          if (error) {
-            logger.error(`Error in redis, get cache... ${error} `);
-            rej(error);
-          }
-
-          if (reply) {
-            logger.info('Ok, cache works.');
-            res(JSON.parse(reply));
-          } else {
-            //search the book
-            const newBookDetails = await Book.findById(_id);
-            //save in cache
-            client.set(String(_id), JSON.stringify(newBookDetails), (error, reply) => {
-              if (error) {
-                logger.error(`Error in redis set cache... ${error}, ${reply}`);
-                rej(error);
-              }
-
-              logger.info('Ok, set cache works.');
-            });
-            res(newBookDetails);
-          }
-        });
-      });
+    async bookDetails(_, { _id }) {
+      //Check if the book is on cache
+      const checkIfExist = await ClientRedis.get(_id);
+      if (checkIfExist !== null) {
+        return checkIfExist;
+      }
+      //search the book and
+      const res = await ClientMongo.findById(_id);
+      if (!res) {
+        throw new Error("This id doesn't exist.");
+      }
+      await ClientRedis.set(_id, res);
+      return res;
     },
   },
   Mutation: {
-    async createBook(_, { input }, { client }) {
-      const newBook = new Book(input);
-      const ifItExist = await Book.find({ title: input.title });
+    async createBook(_, { input }) {
+      const ifItExist = await ClientMongo.find({ title: input.title });
       if (ifItExist.length > 0) {
         //check if the title alreay exist.
         logger.info({ ErrorMessage: 'This book already exist.' });
-        return null;
+        throw new Error('This book title alreasy exist.');
       }
-      //check if status is valid
-      if (newBook.status !== 'LENT' && newBook.status !== 'AVAILABLE' && newBook.status !== 'UNAVAILABLE') {
-        logger.info({ ErrorMessage: 'Invalid status' });
-        return null;
-      }
-      //save in database
-      await newBook.save();
+      //create the book
+      const newBook = await ClientMongo.create(input);
       //save in cache
-      client.set(String(newBook._id), JSON.stringify(newBook));
+      ClientRedis.set(newBook._id, newBook);
       return newBook;
     },
-    async deleteBook(_, { _id }, { client }) {
+    async deleteBook(_, { _id }) {
+      const ifItExist = await ClientMongo.findById(_id);
+      console.log(ifItExist);
+      if (ifItExist === null) {
+        //check if the book exist
+        logger.info({ ErrorMessage: "This book doesn't exist." });
+        throw new Error("This book doesn't exist.");
+      }
       //remove of database
-      const newDeleteBook = await Book.findByIdAndDelete(_id);
+      const newDeleteBook = await ClientMongo.delete(_id);
       //remove of cache
-      client.del(_id);
+      ClientRedis.delete(_id);
       return newDeleteBook;
     },
-    async updateBook(_, { _id, input }, { client }) {
+    async updateBook(_, { _id, input }) {
       // check if title already exist.
-      console.log(input.title);
-      const ifItExist = await Book.find({ title: input.title });
-      if (ifItExist.length > 0 && ifItExist[0].title === input.title) {
-        console.log(ifItExist[0].title);
-        logger.info({ ErrorMessage: 'This book already exist.' });
-        return null;
-      }
-      //check if status is valid
-      if (input.status !== 'LENT' && input.status !== 'AVAILABLE' && input.status !== 'UNAVAILABLE') {
-        logger.info({ ErrorMessage: 'Invalid status' });
-        return null;
+      const ifItExist = await ClientMongo.find({ title: input.title });
+      if (ifItExist.length > 0 && String(ifItExist[0]._id) !== String(_id)) {
+        throw new Error('This book title alreasy exist.');
       }
       // update book
-      const newUpdateBook = await Book.findByIdAndUpdate(_id, input, { new: true });
+      const newUpdateBook = await ClientMongo.update(_id, input);
       // remove of cache
-      client.del(input._id);
-      // add to cache
-      client.set(String(input._id), JSON.stringify(newUpdateBook));
+      ClientRedis.update(_id, input);
       return newUpdateBook;
     },
   },
