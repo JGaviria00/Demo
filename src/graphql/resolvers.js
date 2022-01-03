@@ -1,6 +1,6 @@
 const logger = require('@condor-labs/logger');
-const MongoRepository = require('../repository/MongoRepository');
-const RedisRepository = require('../repository/RedisRepository');
+const MongoRepository = require('../repository/mongoRepository');
+const RedisRepository = require('../repository/redisRepository');
 
 const ClientMongo = new MongoRepository();
 const ClientRedis = new RedisRepository();

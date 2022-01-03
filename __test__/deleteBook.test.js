@@ -10,12 +10,12 @@ const book = {
 
 const bookId = '61c354841740e6134f3f88be';
 
-jest.mock('../src/repository/MongoRepository', () => () => ({
+jest.mock('../src/repository/mongoRepository', () => () => ({
   findById: (data) => book,
   delete: (data) => book,
 }));
 
-jest.mock('../src/repository/RedisRepository', () => () => ({
+jest.mock('../src/repository/redisRepository', () => () => ({
   set: (key, data) => null,
   get: (key) => null,
   delete: (key) => null,

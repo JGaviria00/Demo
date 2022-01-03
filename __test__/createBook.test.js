@@ -8,13 +8,13 @@ const book = {
   status: 'AVAILABLE',
 };
 
-jest.mock('../src/repository/MongoRepository', () => () => ({
+jest.mock('../src/repository/mongoRepository', () => () => ({
   create: (data) => book,
   find: (data) => [],
   constructor: () => [],
 }));
 
-jest.mock('../src/repository/RedisRepository', () => () => ({
+jest.mock('../src/repository/redisRepository', () => () => ({
   set: (key, data) => null,
   get: (key) => null,
 }));

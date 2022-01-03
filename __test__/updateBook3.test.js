@@ -15,12 +15,12 @@ const book2 = {
   status: 'LENT',
 };
 
-jest.mock('../src/repository/MongoRepository', () => () => ({
+jest.mock('../src/repository/mongoRepository', () => () => ({
   find: (data) => [book2],
   update: (id, data) => book,
 }));
 
-jest.mock('../src/repository/RedisRepository', () => () => ({
+jest.mock('../src/repository/redisRepository', () => () => ({
   delete: (key) => null,
 }));
 
