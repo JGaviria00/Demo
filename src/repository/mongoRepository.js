@@ -1,5 +1,5 @@
-const mongo = require('./../dataBase/mongoHelper');
-const bookModel = require('./../dataBase/model');
+const mongo = require('../dataBase/mongoHelper');
+const bookModel = require('../dataBase/model');
 const logger = require('@condor-labs/logger');
 
 module.exports = class MongoRepository {
