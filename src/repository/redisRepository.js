@@ -1,6 +1,6 @@
 const redisHelper = require('../redis/redisHelper');
 
-module.exports = class Redis {
+module.exports = class RedisRepository {
   constructor() {
     this.redis = redisHelper;
     this.redis.connection();

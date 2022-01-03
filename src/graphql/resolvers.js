@@ -1,9 +1,9 @@
 const logger = require('@condor-labs/logger');
-const Mongo = require('../repository/mongoRepository');
-const Redis = require('../repository/redisRepository');
+const MongoRepository = require('./../repository/MongoRepository');
+const RedisRepository = require('../repository/RedisRepository');
 
-const ClientMongo = new Mongo();
-const ClientRedis = new Redis();
+const ClientMongo = new MongoRepository();
+const ClientRedis = new RedisRepository();
 
 const resolvers = {
   Query: {
@@ -58,6 +58,7 @@ const resolvers = {
       // check if title already exist.
       const ifItExist = await ClientMongo.find({ title: input.title });
       if (ifItExist.length > 0 && String(ifItExist[0]._id) !== String(_id)) {
+        logger.info({ ErrorMessage: 'This book already exist.' });
         throw new Error('This book title alreasy exist.');
       }
       // update book

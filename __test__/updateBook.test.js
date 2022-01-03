@@ -7,22 +7,21 @@ const book = {
   pages: 1,
   status: 'AVAILABLE',
 };
+const bookId = '61c354841740e6134f3f88be';
 
 jest.mock('../src/repository/MongoRepository', () => () => ({
-  create: (data) => book,
   find: (data) => [],
-  constructor: () => [],
+  update: (id, data) => book,
 }));
 
 jest.mock('../src/repository/RedisRepository', () => () => ({
-  set: (key, data) => null,
-  get: (key) => null,
+  delete: (key) => null,
 }));
 
-describe('Create book with valid input.', () => {
-  test('Should return the new book and save on database.', async () => {
+describe('Update book with valid input.', () => {
+  test('Should return the update book and save on database.', async () => {
     //Act
-    const res = await resolvers.Mutation.createBook(null, { input: book });
+    const res = await resolvers.Mutation.updateBook(null, { _id: bookId, input: book });
     //Assert
     expect(res.title).toEqual(book.title);
     expect(res.author).toEqual(book.author);
